@@ -1,0 +1,68 @@
+Sistemul de Fișiere Linux implementat cu Arbori binari de cautare.
+
+Declararea structurilor si functilor a fost facuta in fisierul structs.h.
+In functii-Arb.c am scris corpul functiilor folosite in main si a unor functii
+auxiliare. In tem3.c am citit instructiunile intr-un loop pana la citirea
+instructiunii quit si am apelat functiile corespunzatoare.
+
+
+Functiile folosite:
+
+ConstrArbFisier si ConstrArbDirector
+Aloca memorie pentru un fisier/director si pentru numele acestuia. Daca nu s-a
+putut face alocarea se intoarce NULL, altfel se intoare arborele creat. Se
+apeleaza la comenzile touch si mkdir cand directorul curent are files,
+respectiv directories NULL.
+
+InserareFisier si InserareDirector
+Aceste functii au rol dublu, atat pentru inserarea unui fisier/director cat si
+pentru verificarea daca acel fisier/director exista deja in directorul curent.
+Daca se apeleaza cu file/directory = 1 se face si inserarea. Functile intorc 1
+daca fisierul/directorul exista si 0 daca nu. Se apeleaza in touch si mkdir
+pentru a verifica daca exista deja un fisier/director cu numele introdus cat si
+pentru introducerea in directorul curent in files, respectiv in directories
+cand acestea sunt nenule. Sunt folosire de asemenea la comenzile rm si rmdir
+pentru a verifica existenta fisierul/directorul ce trebuie eliminat.
+
+Ls
+Foloseste functiile auxiliare  SRDFisier si SRDDirector care parcurg arborele
+SRD si printeaza in ordine lexicografica fisierele/directoarele.
+
+DistrugeArbFiles si DistrugeArbore
+DistrugeArbore este o functie recursiva care elibereaza memoria incepand de la
+root pana la frunze. Acesta elibereaza memoria ocupata de directoare si
+foloseste functia auxiliara DistrugeArbFiles pentru a fisiere. Folosita la
+comanda quit.
+
+Rm si Rmdir
+Incep prin localizarea nodului (existenta acestuia este garantata prin apelarea
+functiilor de inserare in main) prin parcurgerea recursiva a arborelui. Cand
+acesta este localizat se face eliminarea in functie de tipul sau. Daca este
+frunza se sterge, daca are ordin 1 este inlocuit de copilul existent, daca are
+ordin 2 este inlocuit de minimul din subarborele drept. Se folosesc functiile
+auxiliare MinFisier si MinDir care returneaza minimul din arborele
+files/directories. In Rmdir se apeleaza si DistrugeArbFiles pentru a elibera
+memoria ocupata de arb de fisiere din directorul eliminat.
+
+Cd
+Parcurgem recursiv arborele incepand de la arborele directories din directorul
+curent pana la gasirea numelui cautat (sau NULL daca nu il gasim). Pentru a
+pastra directorul initial, daca nu gasim numele cautat functia intoarce
+adresa directorul initial, altfel intoarce adresa directorul gasit.
+
+Pwd
+Funcite recursiva care pleaca din nodul curent si merge din parinte in parinte
+pana ajunge la root. Cand ajunge la root printeaza "/root" si se intoarce,
+printand directoarele pana la directorul curent.
+
+FindFile si FindDir
+Pentru amandoua functiile se parcurg recursiv toate directoarele incepand de
+la root. Pentru FindDir se compara numele acestora cu directorul cautat, daca
+este gasit se intoarce 1, altfel se intoarce suma apelarii functiei pe st, dr
+si directories ale directorului curent. Daca se ajunge la un director NULL se
+intoarce 0. Daca se gaseste directorul se printeaza ca a fost gasit si se
+apeleaza pwd. Astfel suma va fi 1 daca directorul este gasit si 0 daca nu.
+Pentru gasirea unui fisier se foloseste functia FindFile care la parcurgerea
+directoarelor aduga o cautare in files folosind functia auxiliara FindFileAux.
+In main se verifica daca functiile intorc 0 si daca da se printeaza ca
+fisierul/ nu a fost gasit.
